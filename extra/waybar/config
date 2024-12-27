@@ -23,7 +23,7 @@
 
     "custom/arch": {
         "format": "󰣇",
-        "on-click": "hyprlauncher",
+        "on-click": "fuzzel",
         "tooltip": false
     },
 

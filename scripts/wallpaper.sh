@@ -1,22 +1,23 @@
 #!/bin/sh
 
-config_dir="$HOME/dotfiles/extra/hyprwall"
+config_dir="$HOME/dotfiles/extra/waypaper"
 config_file="$config_dir/config.ini"
 last_value=""
 
 inotifywait -m -e modify,create "$config_dir" | while read -r directory events filename; do
     if [ "$filename" = "config.ini" ]; then
-        current_value=$(grep "last_wallpaper" "$config_file" | cut -d'=' -f2 | tr -d ' ')
+        current_value=$(grep "^wallpaper = " "$config_file" | cut -d'=' -f2 | tr -d ' ')
         if [ "$current_value" != "$last_value" ] && [ -n "$current_value" ]; then
-            wal -i "$(echo "$current_value" | sed "s|^~|$HOME|")"
-            killall waybar
+            wallpaper_path=$(echo "$current_value" | sed "s|^~|$HOME|")
+            wal -i "$wallpaper_path"
+            killall -q waybar
             waybar &
             pywalfox update
             background=$(jq -r '.colors.color2' $HOME/.cache/wal/colors.json | sed 's/#//')
             echo "\$background = rgba(${background}FF)" >$HOME/.cache/wal/colors-dotfiles.conf
             mkdir -p "$HOME/.config/vesktop/themes"
-            cp $HOME/.cache/wal/discord-pywal.css "$HOME/.config/vesktop/themes/pywal.css"
-            cp "$(eval echo "$current_value")" "$HOME/.cache/wal/current_wallpaper"
+            cp "$HOME/.cache/wal/discord-pywal.css" "$HOME/.config/vesktop/themes/pywal.css"
+            cp "$wallpaper_path" "$HOME/.cache/wal/current_wallpaper"
 
             color0=$(sed -n '1p' $HOME/.cache/wal/colors | sed 's/#//g')
             color1=$(sed -n '2p' $HOME/.cache/wal/colors | sed 's/#//g')
@@ -137,81 +138,31 @@ EOF
     timeout = 0
 EOF
 
-            cat >$HOME/dotfiles/extra/hyprlauncher/config.toml <<EOF
-[window]
-width = 600
-height = 700
-anchor = "center"
-margin_top = 0
-margin_bottom = 0
-margin_left = 0
-margin_right = 0
-show_descriptions = false
-show_paths = false
-show_icons = true
-show_search = true
-show_actions = false
-show_border = true
-border_width = 2
-use_gtk_colors = false
-use_custom_css = false
-max_entries = 50
+            cat >$HOME/.config/fuzzel/fuzzel.ini <<EOF
+[main]
+font=JetBrainsMono Nerd Font:size=14
+terminal=alacritty
+width=35
+horizontal-pad=20
+vertical-pad=20
+inner-pad=10
+line-height=25
+layer=overlay
 
-[window.custom_navigate_keys]
-up = "k"
-down = "j"
-delete_word = "h"
+[colors]
+background=${color0}ff
+text=${color7}ff
+match=${color7}ff
+selection=${color2}ff
+selection-text=${color7}ff
+border=${color2}ff
 
-[theme.colors]
-window_bg = "#${color0}"
-search_bg = "#${color2}"
-search_bg_focused = "#${color2}"
-item_bg = "#${color0}"
-item_bg_hover = "#${color2}"
-item_bg_selected = "#${color2}"
-search_text = "#${color7}"
-search_caret = "#${color7}"
-item_name = "#${color7}"
-item_name_selected = "#${color7}"
-item_description = "#${color7}"
-item_description_selected = "#${color7}"
-item_path = "#${color7}"
-item_path_selected = "#${color7}"
-border = "#${color2}"
-
-[theme.corners]
-window = 5
-search = 8
-list_item = 8
-
-[theme.spacing]
-search_margin = 12
-search_padding = 12
-item_margin = 6
-item_padding = 4
-
-[theme.typography]
-search_font_size = 16
-item_name_size = 14
-item_description_size = 12
-item_path_size = 12
-item_path_font_family = "monospace"
-
-[debug]
-disable_auto_focus = false
-enable_logging = false
+[border]
+width=2
+radius=5
 
 [dmenu]
-allow_invalid = false
-case_sensitive = false
-
-[web_search]
-enabled = false
-engine = "duckduckgo"
-prefixes = []
-
-[calculator]
-enabled = false
+exit-immediately-if-empty=yes
 EOF
 
             pkill dunst

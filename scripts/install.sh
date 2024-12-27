@@ -108,9 +108,9 @@ install_deps() {
     current_step=1
 
     $AUR_HELPER -S --needed --noconfirm \
-        cava pipes.sh checkupdates-with-aur librewolf-bin hyprwall-bin wlogout \
-        python-pywalfox-librewolf spotify vesktop-bin hyprlauncher-bin hyprpolkitagent-git \
-        protonup-qt-bin >/dev/null 2>&1 &&
+        cava pipes.sh checkupdates-with-aur librewolf-bin wlogout \
+        python-pywalfox-librewolf spotify vesktop-bin hyprpolkitagent-git \
+        waypaper >/dev/null 2>&1 &&
         printf "%b\n" "${GREEN}::${RC} AUR dependencies installed (${current_step}/${total_steps})" || {
         printf "%b\n" "${RED}::${RC} Failed to install AUR dependencies."
         exit 1
@@ -137,7 +137,7 @@ install_deps() {
         ncurses lib32-ncurses vulkan-icd-loader lib32-vulkan-icd-loader ocl-icd lib32-ocl-icd libva lib32-libva \
         gst-plugins-base-libs lib32-gst-plugins-base-libs sdl2 lib32-sdl2 v4l-utils lib32-v4l-utils sqlite bubblewrap \
         lib32-sqlite vulkan-radeon lib32-vulkan-radeon lib32-mangohud mangohud pavucontrol qt6ct hyperfine \
-        lsp-plugins >/dev/null 2>&1 &&
+        lsp-plugins fuzzel >/dev/null 2>&1 &&
         printf "%b\n" "${GREEN}::${RC} Dependencies installed (${current_step}/${total_steps})" || {
         printf "%b\n" "${RED}::${RC} Failed to install dependencies. Check /var/log/pacman.log for details."
         exit 1
@@ -173,9 +173,9 @@ setup_configurations() {
     mv "$XDG_CONFIG_HOME/qt5ct" "$XDG_CONFIG_HOME/qt5ct-bak" >/dev/null 2>&1
     mv "$XDG_CONFIG_HOME/hypr" "$XDG_CONFIG_HOME/hypr-bak" >/dev/null 2>&1
     mv "$XDG_CONFIG_HOME/qt6ct" "$XDG_CONFIG_HOME/qt6ct-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/hyprwall" "$XDG_CONFIG_HOME/hyprwall-bak" >/dev/null 2>&1
     mv "$XDG_CONFIG_HOME/wlogout" "$XDG_CONFIG_HOME/wlogout-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/hyprlauncher" "$XDG_CONFIG_HOME/hyprlauncher-bak" >/dev/null 2>&1
+    mv "$XDG_CONFIG_HOME/fuzzel" "$XDG_CONFIG_HOME/fuzzel-bak" >/dev/null 2>&1
+    mv "$XDG_CONFIG_HOME/waypaper" "$XDG_CONFIG_HOME/waypaper-bak" >/dev/null 2>&1
     mv "$HOME/.zshrc" "$HOME/.zshrc-bak" >/dev/null 2>&1
     mv "$HOME/.zprofile" "$HOME/.zprofile-bak" >/dev/null 2>&1
 
@@ -217,13 +217,13 @@ setup_configurations() {
     ln -sf "$HYPRLAND_DIR/extra/gtk-3.0" "$XDG_CONFIG_HOME/gtk-3.0" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up gtk-3.0 configuration."; }
     ln -sf "$HYPRLAND_DIR/hypr" "$XDG_CONFIG_HOME/hypr" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up hypr configuration."; }
     ln -sf "$HYPRLAND_DIR/extra/waybar" "$XDG_CONFIG_HOME/waybar" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up waybar configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/hyprwall" "$XDG_CONFIG_HOME/hyprwall" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up hyprwall configuration."; }
     ln -sf "$HYPRLAND_DIR/extra/dunst" "$XDG_CONFIG_HOME/dunst" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up dunst configuration."; }
     ln -sf "$HYPRLAND_DIR/extra/wlogout" "$XDG_CONFIG_HOME/wlogout" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up wlogout configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/hyprlauncher" "$XDG_CONFIG_HOME/hyprlauncher" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up hyprlauncher configuration."; }
     ln -sf "$HYPRLAND_DIR/extra/alacritty" "$XDG_CONFIG_HOME/alacritty" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up alacritty configuration."; }
     ln -sf "$HYPRLAND_DIR/extra/qt5ct" "$XDG_CONFIG_HOME/qt5ct" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up qt5ct configuration."; }
     ln -sf "$HYPRLAND_DIR/extra/qt6ct" "$XDG_CONFIG_HOME/qt6ct" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up qt6ct configuration."; }
+    ln -sf "$HYPRLAND_DIR/extra/fuzzel" "$XDG_CONFIG_HOME/fuzzel" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up fuzzel configuration."; }
+    ln -sf "$HYPRLAND_DIR/extra/waypaper" "$XDG_CONFIG_HOME/waypaper" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up waypaper configuration."; }
     cp -R "$HYPRLAND_DIR/extra/templates/discord-pywal.css" "$XDG_CONFIG_HOME/wal/templates" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up discord-pywal.css."; }
     cp -R "$HYPRLAND_DIR/extra/templates/alacritty.toml" "$XDG_CONFIG_HOME/wal/templates" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up alacritty.toml."; }
 
