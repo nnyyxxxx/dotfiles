@@ -109,8 +109,7 @@ install_deps() {
 
     $AUR_HELPER -S --needed --noconfirm \
         cava pipes.sh checkupdates-with-aur librewolf-bin wlogout \
-        python-pywalfox-librewolf spotify vesktop-bin hyprpolkitagent-git \
-        waypaper >/dev/null 2>&1 &&
+        python-pywalfox-librewolf spotify vesktop-bin waypaper >/dev/null 2>&1 &&
         printf "%b\n" "${GREEN}::${RC} AUR dependencies installed (${current_step}/${total_steps})" || {
         printf "%b\n" "${RED}::${RC} Failed to install AUR dependencies."
         exit 1
@@ -137,7 +136,7 @@ install_deps() {
         ncurses lib32-ncurses vulkan-icd-loader lib32-vulkan-icd-loader ocl-icd lib32-ocl-icd libva lib32-libva \
         gst-plugins-base-libs lib32-gst-plugins-base-libs sdl2 lib32-sdl2 v4l-utils lib32-v4l-utils sqlite bubblewrap \
         lib32-sqlite vulkan-radeon lib32-vulkan-radeon lib32-mangohud mangohud pavucontrol qt6ct hyperfine \
-        lsp-plugins fuzzel >/dev/null 2>&1 &&
+        lsp-plugins fuzzel polkit-kde-agent >/dev/null 2>&1 &&
         printf "%b\n" "${GREEN}::${RC} Dependencies installed (${current_step}/${total_steps})" || {
         printf "%b\n" "${RED}::${RC} Failed to install dependencies. Check /var/log/pacman.log for details."
         exit 1
@@ -229,8 +228,6 @@ setup_configurations() {
 
     systemctl --user enable pipewire >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up pipewire."; }
     systemctl --user enable pipewire-pulse >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up pipewire-pulse."; }
-    systemctl --user enable hyprpolkitagent >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up hyprpolkitagent."; }
-    systemctl --user start hyprpolkitagent >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to start hyprpolkitagent."; }
 
     $ESCALATION_TOOL ln -sf /bin/dash /bin/sh >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to create symlink for sh."; }
     $ESCALATION_TOOL usermod -s /bin/zsh "$USERNAME" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to change shell."; }
