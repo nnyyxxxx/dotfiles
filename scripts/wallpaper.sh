@@ -28,9 +28,77 @@ inotifywait -m -e modify,create "$config_dir" | while read -r directory events f
             color6=$(sed -n '7p' $HOME/.cache/wal/colors | sed 's/#//g')
             color7=$(sed -n '8p' $HOME/.cache/wal/colors | sed 's/#//g')
 
-            find $HOME/dotfiles/extra/gtk-3.0/dark-horizon/gtk-3.0/ -name "*.css" -exec sed -i 's/background-color: #[0-9a-fA-F]\+;*/background-color: #'"${color0}"';/g' {} \;
+            find $HOME/dotfiles/extra/gtk-3.0/dark-horizon/gtk-3.0/ -name "*.css" -exec sed -i \
+                -e "s/background-color: #[0-9a-fA-F]\+;/background-color: #${color0};/g" \
+                -e "s/-gtk-secondary-caret-color: #[0-9a-fA-F]\+;/-gtk-secondary-caret-color: #${color4};/g" \
+                -e "s/border: 1px solid #[0-9a-fA-F]\+;/border: 1px solid #${color2};/g" \
+                -e "s/border-color: #[0-9a-fA-F]\+;/border-color: #${color2};/g" \
+                -e "s/box-shadow: inset 0 0 0 [0-9]\+px #[0-9a-fA-F]\+;/box-shadow: inset 0 0 0 2px #${color2};/g" \
+                -e "s/outline-color: #[0-9a-fA-F]\+;/outline-color: #${color2};/g" \
+                -e "s/background-image: radial-gradient(circle, #[0-9a-fA-F]\+ /background-image: radial-gradient(circle, #${color4} /g" \
+                -e "s/background-image: -gtk-gradient(radial, center center, 0, center center, 0.001, to(#[0-9a-fA-F]\+)/background-image: -gtk-gradient(radial, center center, 0, center center, 0.001, to(#${color4})/g" \
+                -e "s/caret-color: #[0-9a-fA-F]\+;/caret-color: #${color4};/g" \
+                -e "s/border-bottom: 2px solid #[0-9a-fA-F]\+;/border-bottom: 2px solid #${color2};/g" \
+                -e "s/border-top: 2px solid #[0-9a-fA-F]\+;/border-top: 2px solid #${color2};/g" \
+                -e "s/border-left: 2px solid #[0-9a-fA-F]\+;/border-left: 2px solid #${color2};/g" \
+                -e "s/border-right: 2px solid #[0-9a-fA-F]\+;/border-right: 2px solid #${color2};/g" \
+                -e "s/box-shadow: 0 0 0 1px #[0-9a-fA-F]\+;/box-shadow: 0 0 0 1px #${color2};/g" \
+                -e "s/text-shadow: 0 1px #[0-9a-fA-F]\+;/text-shadow: 0 1px #${color0};/g" \
+                -e "s/@define-color theme_bg_color #[0-9a-fA-F]\+;/@define-color theme_bg_color #${color0};/g" \
+                -e "s/@define-color theme_fg_color #[0-9a-fA-F]\+;/@define-color theme_fg_color #${color7};/g" \
+                -e "s/@define-color theme_text_color #[0-9a-fA-F]\+;/@define-color theme_text_color #${color7};/g" \
+                -e "s/@define-color theme_selected_bg_color #[0-9a-fA-F]\+;/@define-color theme_selected_bg_color #${color2};/g" \
+                -e "s/@define-color theme_selected_fg_color #[0-9a-fA-F]\+;/@define-color theme_selected_fg_color #${color7};/g" \
+                -e "s/@define-color accent_bg_color #[0-9a-fA-F]\+;/@define-color accent_bg_color #${color4};/g" \
+                -e "s/@define-color accent_fg_color #[0-9a-fA-F]\+;/@define-color accent_fg_color #${color7};/g" \
+                -e "s/@define-color accent_color #[0-9a-fA-F]\+;/@define-color accent_color #${color4};/g" \
+                -e "s/@define-color destructive_color #[0-9a-fA-F]\+;/@define-color destructive_color #${color1};/g" \
+                -e "s/@define-color success_color #[0-9a-fA-F]\+;/@define-color success_color #${color2};/g" \
+                -e "s/@define-color warning_color #[0-9a-fA-F]\+;/@define-color warning_color #${color3};/g" \
+                -e "s/@define-color error_color #[0-9a-fA-F]\+;/@define-color error_color #${color1};/g" \
+                -e "s/@define-color window_bg_color #[0-9a-fA-F]\+;/@define-color window_bg_color #${color0};/g" \
+                -e "s/@define-color window_fg_color #[0-9a-fA-F]\+;/@define-color window_fg_color #${color7};/g" \
+                -e "s/@define-color view_bg_color #[0-9a-fA-F]\+;/@define-color view_bg_color #${color0};/g" \
+                -e "s/@define-color view_fg_color #[0-9a-fA-F]\+;/@define-color view_fg_color #${color7};/g" \
+                -e "s/@define-color headerbar_bg_color #[0-9a-fA-F]\+;/@define-color headerbar_bg_color #${color0};/g" \
+                -e "s/@define-color headerbar_fg_color #[0-9a-fA-F]\+;/@define-color headerbar_fg_color #${color7};/g" \
+                {} \;
 
-            find $HOME/dotfiles/extra/gtk-3.0/dark-horizon/gtk-4.0/ -name "*.css" -exec sed -i 's/background-color: #[0-9a-fA-F]\+;*/background-color: #'"${color0}"';/g' {} \;
+            find $HOME/dotfiles/extra/gtk-3.0/dark-horizon/gtk-4.0/ -name "*.css" -exec sed -i \
+                -e "s/background-color: #[0-9a-fA-F]\+;/background-color: #${color0};/g" \
+                -e "s/-gtk-secondary-caret-color: #[0-9a-fA-F]\+;/-gtk-secondary-caret-color: #${color4};/g" \
+                -e "s/border: 1px solid #[0-9a-fA-F]\+;/border: 1px solid #${color2};/g" \
+                -e "s/border-color: #[0-9a-fA-F]\+;/border-color: #${color2};/g" \
+                -e "s/box-shadow: inset 0 0 0 [0-9]\+px #[0-9a-fA-F]\+;/box-shadow: inset 0 0 0 2px #${color2};/g" \
+                -e "s/outline-color: #[0-9a-fA-F]\+;/outline-color: #${color2};/g" \
+                -e "s/background-image: radial-gradient(circle, #[0-9a-fA-F]\+ /background-image: radial-gradient(circle, #${color4} /g" \
+                -e "s/background-image: -gtk-gradient(radial, center center, 0, center center, 0.001, to(#[0-9a-fA-F]\+)/background-image: -gtk-gradient(radial, center center, 0, center center, 0.001, to(#${color4})/g" \
+                -e "s/caret-color: #[0-9a-fA-F]\+;/caret-color: #${color4};/g" \
+                -e "s/border-bottom: 2px solid #[0-9a-fA-F]\+;/border-bottom: 2px solid #${color2};/g" \
+                -e "s/border-top: 2px solid #[0-9a-fA-F]\+;/border-top: 2px solid #${color2};/g" \
+                -e "s/border-left: 2px solid #[0-9a-fA-F]\+;/border-left: 2px solid #${color2};/g" \
+                -e "s/border-right: 2px solid #[0-9a-fA-F]\+;/border-right: 2px solid #${color2};/g" \
+                -e "s/box-shadow: 0 0 0 1px #[0-9a-fA-F]\+;/box-shadow: 0 0 0 1px #${color2};/g" \
+                -e "s/text-shadow: 0 1px #[0-9a-fA-F]\+;/text-shadow: 0 1px #${color0};/g" \
+                -e "s/@define-color theme_bg_color #[0-9a-fA-F]\+;/@define-color theme_bg_color #${color0};/g" \
+                -e "s/@define-color theme_fg_color #[0-9a-fA-F]\+;/@define-color theme_fg_color #${color7};/g" \
+                -e "s/@define-color theme_text_color #[0-9a-fA-F]\+;/@define-color theme_text_color #${color7};/g" \
+                -e "s/@define-color theme_selected_bg_color #[0-9a-fA-F]\+;/@define-color theme_selected_bg_color #${color2};/g" \
+                -e "s/@define-color theme_selected_fg_color #[0-9a-fA-F]\+;/@define-color theme_selected_fg_color #${color7};/g" \
+                -e "s/@define-color accent_bg_color #[0-9a-fA-F]\+;/@define-color accent_bg_color #${color4};/g" \
+                -e "s/@define-color accent_fg_color #[0-9a-fA-F]\+;/@define-color accent_fg_color #${color7};/g" \
+                -e "s/@define-color accent_color #[0-9a-fA-F]\+;/@define-color accent_color #${color4};/g" \
+                -e "s/@define-color destructive_color #[0-9a-fA-F]\+;/@define-color destructive_color #${color1};/g" \
+                -e "s/@define-color success_color #[0-9a-fA-F]\+;/@define-color success_color #${color2};/g" \
+                -e "s/@define-color warning_color #[0-9a-fA-F]\+;/@define-color warning_color #${color3};/g" \
+                -e "s/@define-color error_color #[0-9a-fA-F]\+;/@define-color error_color #${color1};/g" \
+                -e "s/@define-color window_bg_color #[0-9a-fA-F]\+;/@define-color window_bg_color #${color0};/g" \
+                -e "s/@define-color window_fg_color #[0-9a-fA-F]\+;/@define-color window_fg_color #${color7};/g" \
+                -e "s/@define-color view_bg_color #[0-9a-fA-F]\+;/@define-color view_bg_color #${color0};/g" \
+                -e "s/@define-color view_fg_color #[0-9a-fA-F]\+;/@define-color view_fg_color #${color7};/g" \
+                -e "s/@define-color headerbar_bg_color #[0-9a-fA-F]\+;/@define-color headerbar_bg_color #${color0};/g" \
+                -e "s/@define-color headerbar_fg_color #[0-9a-fA-F]\+;/@define-color headerbar_fg_color #${color7};/g" \
+                {} \;
 
             gsettings set org.gnome.desktop.interface gtk-theme "dummy"
             gsettings set org.gnome.desktop.interface gtk-theme "dark-horizon"

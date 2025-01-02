@@ -12,10 +12,10 @@
 
 @keyframes ripple-on-headerbar {
   from {
-    background-image: radial-gradient(circle, #424243 0%, transparent 0%);
+    background-image: radial-gradient(circle, #C4B6C8 0%, transparent 0%);
   }
   to {
-    background-image: radial-gradient(circle, #424243 100%, transparent 100%);
+    background-image: radial-gradient(circle, #C4B6C8 100%, transparent 100%);
   }
 }
 
@@ -86,7 +86,7 @@ rubberband, .content-view rubberband, .content-view columnview.view > rubberband
 .content-view treeview.view > rubberband, .content-view .rubberband, columnview.view > rubberband, .content-view columnview.view > .rubberband,
 treeview.view > rubberband,
 .content-view treeview.view > .rubberband, gridview > rubberband, flowbox > rubberband {
-  border: 1px solid #424243;
+  border: 1px solid #E2AAA5;
   background-color: rgba(137, 180, 250, 0.3);
 }
 
@@ -683,7 +683,7 @@ entry.success > image:disabled {
 entry > progress,
 entry progress > trough > progress {
   margin: 0 -4px;
-  border-bottom: 2px solid #424243;
+  border-bottom: 2px solid #E2AAA5;
   background-color: transparent;
 }
 
@@ -1120,7 +1120,7 @@ button.card:checked {
   background-image: none;
   background-color: #000000;
   color: rgba(17, 17, 27, 0.87);
-  border-color: #424243;
+  border-color: #E2AAA5;
 }
 
 button.card:checked:hover {
@@ -1146,7 +1146,7 @@ button.card:checked.has-open-popup {
 
 button.card:drop(active) {
   color: #fab387;
-  box-shadow: inset 0 0 0 1px #fab387;
+  box-shadow: inset 0 0 0 2px #E2AAA5;
 }
 
 .linked:not(.vertical) > button:focus, .linked.vertical > button:focus {
@@ -5608,7 +5608,7 @@ window.solid-csd {
   padding: 2px;
   border-radius: 0;
   background-color: #000000;
-  border: 1px solid #393947;
+  border: 1px solid #E2AAA5;
 }
 
 window.solid-csd:backdrop {
@@ -5754,7 +5754,7 @@ shortcut > .keycap {
 }
 
 :not(decoration):not(window):drop(active) {
-  caret-color: #424243;
+  caret-color: #C4B6C8;
 }
 
 stackswitcher {
@@ -7336,7 +7336,7 @@ panelstatusbar > paneltogglebutton button {
 }
 
 .style-variant button.toggle:checked > stylevariantpreview > .wallpaper {
-  outline-color: #424243;
+  outline-color: #E2AAA5;
 }
 
 playlistview scrollbar.overlay-indicator.dragging, playlistview scrollbar.overlay-indicator.hovering {
@@ -7350,13 +7350,13 @@ playlistview queuerow image.card {
 
 .exit-info {
   padding: 6px;
-  border-top: 2px solid #424243;
+  border-top: 2px solid #E2AAA5;
   background: rgba(137, 180, 250, 0.9);
   color: rgba(17, 17, 27, 0.87);
 }
 
 .error .exit-info {
-  border-top: 2px solid #f38ba8;
+  border-top: 2px solid #E2AAA5;
   background: rgba(243, 139, 168, 0.9);
   color: rgba(17, 17, 27, 0.87);
 }
@@ -7665,7 +7665,7 @@ preferencesgroup > box button.background-preview-button.toggle:active {
 }
 
 preferencesgroup > box button.background-preview-button.toggle:checked {
-  outline-color: #424243;
+  outline-color: #E2AAA5;
 }
 
 preferencesgroup > box .cutout-button {
@@ -8173,7 +8173,7 @@ themeselector checkbutton.follow:checked, themeselector checkbutton.light:checke
 panelthemeselector checkbutton.follow:checked,
 panelthemeselector checkbutton.light:checked,
 panelthemeselector checkbutton.dark:checked {
-  box-shadow: inset 0 0 0 2px #424243;
+  box-shadow: inset 0 0 0 2px #E2AAA5;
 }
 
 themeselector checkbutton.follow,
@@ -8254,7 +8254,7 @@ themeswitcher checkbutton {
 }
 
 themeswitcher checkbutton:checked {
-  box-shadow: inset 0 0 0 2px #424243;
+  box-shadow: inset 0 0 0 2px #E2AAA5;
 }
 
 themeswitcher checkbutton radio, themeswitcher checkbutton radio:hover, themeswitcher checkbutton radio:active, themeswitcher checkbutton radio:checked, themeswitcher checkbutton radio:checked:hover, themeswitcher checkbutton radio:checked:active {
@@ -8286,19 +8286,19 @@ themeswitcher checkbutton.dark {
    use responsibly! */
 /*
 widget text/foreground color */
-@define-color theme_fg_color #eff1f5;
+@define-color theme_fg_color #ede6e6;
 /*
 text color for entries, views and content in general */
-@define-color theme_text_color #eff1f5;
+@define-color theme_text_color #ede6e6;
 /*
 widget base background color */
-@define-color theme_bg_color #0F0F0F;
+@define-color theme_bg_color #000000;
 /*
 text widgets and the like base background color */
 @define-color theme_base_color #0F0F0F;
 /*
 base background color of selections */
-@define-color theme_selected_bg_color #424243;
+@define-color theme_selected_bg_color #E2AAA5;
 /*
 text/foreground color of selections */
 @define-color theme_selected_fg_color rgba(17, 17, 27, 0.87);
@@ -8340,9 +8340,9 @@ widgets main borders color on backdrop windows */
 @define-color unfocused_borders rgba(239, 241, 245, 0.12);
 /*
 these are pretty self explicative */
-@define-color warning_color #f9e2af;
-@define-color error_color #f38ba8;
-@define-color success_color #a6e3a1;
+@define-color warning_color #F5C6BA;
+@define-color error_color #A89AA4;
+@define-color success_color #E2AAA5;
 /*
 these colors are exported for the window manager and shouldn't be used in applications,
 read if you used those and something break with a version upgrade you're on your own... */
@@ -8467,27 +8467,27 @@ FIXME this is really an API */
 /* GTK NAMED COLORS
    ----------------
    use responsibly! */
-@define-color accent_bg_color #424243;
+@define-color accent_bg_color #C4B6C8;
 @define-color accent_fg_color rgba(17, 17, 27, 0.87);
-@define-color accent_color #424243;
+@define-color accent_color #C4B6C8;
 @define-color destructive_bg_color #f38ba8;
 @define-color destructive_fg_color rgba(17, 17, 27, 0.87);
-@define-color destructive_color #f38ba8;
+@define-color destructive_color #A89AA4;
 @define-color success_bg_color #a6e3a1;
 @define-color success_fg_color rgba(17, 17, 27, 0.87);
-@define-color success_color #a6e3a1;
+@define-color success_color #E2AAA5;
 @define-color warning_bg_color #f9e2af;
 @define-color warning_fg_color rgba(17, 17, 27, 0.87);
-@define-color warning_color #f9e2af;
+@define-color warning_color #F5C6BA;
 @define-color error_bg_color #f38ba8;
 @define-color error_fg_color rgba(17, 17, 27, 0.87);
-@define-color error_color #f38ba8;
-@define-color window_bg_color #0F0F0F;
-@define-color window_fg_color #eff1f5;
-@define-color view_bg_color #0F0F0F;
-@define-color view_fg_color #eff1f5;
-@define-color headerbar_bg_color #0F0F0F;
-@define-color headerbar_fg_color #eff1f5;
+@define-color error_color #A89AA4;
+@define-color window_bg_color #000000;
+@define-color window_fg_color #ede6e6;
+@define-color view_bg_color #000000;
+@define-color view_fg_color #ede6e6;
+@define-color headerbar_bg_color #000000;
+@define-color headerbar_fg_color #ede6e6;
 @define-color headerbar_border_color rgba(239, 241, 245, 0.12);
 @define-color headerbar_backdrop_color #0F0F0F;
 @define-color headerbar_shade_color rgba(239, 241, 245, 0.12);
