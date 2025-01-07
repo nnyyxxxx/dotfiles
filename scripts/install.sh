@@ -197,10 +197,11 @@ setup_configurations() {
     $ESCALATION_TOOL chmod a+wr /opt/spotify/Apps -R
     yes | spicetify backup apply >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to apply spicetify backup."; }
     mkdir -p "$XDG_CONFIG_HOME/spicetify/Themes"
+    mkdir -p "$XDG_CONFIG_HOME/spicetify/Extensions"
+    cp -R "$HYPRLAND_DIR/extra/spotify/adblock.js" "$XDG_CONFIG_HOME/spicetify/Extensions"
     cp -R "$HYPRLAND_DIR/extra/spotify/Sleek" "$XDG_CONFIG_HOME/spicetify/Themes"
 
-    printf "%b\n" "${YELLOW}::${RC} Testing color scheme generation..."
-    /usr/bin/wal -i "$HYPRLAND_DIR/wallpapers/baddie.png" >/dev/null 2>&1
+    wal -i "$HYPRLAND_DIR/wallpapers/baddie.png" >/dev/null 2>&1
 
     mkdir -p "$HOME/.local/share/nvim/base46"
     touch "$HOME/.local/share/nvim/base46/statusline"

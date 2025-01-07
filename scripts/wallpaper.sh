@@ -401,6 +401,7 @@ EOF
 
             spicetify config current_theme Sleek
             spicetify config color_scheme Pywal
+            spicetify config extensions adblock.js
             spicetify apply
 
             if hyprctl clients | grep "Spotify"; then
