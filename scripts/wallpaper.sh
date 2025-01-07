@@ -216,6 +216,7 @@ vertical-pad=20
 inner-pad=10
 line-height=25
 layer=overlay
+icons-enabled=false
 
 [colors]
 background=${color0}ff
@@ -230,7 +231,7 @@ width=2
 radius=5
 
 [dmenu]
-exit-immediately-if-empty=yes
+exit-immediately-if-empty=true
 EOF
 
             pkill dunst
@@ -398,12 +399,12 @@ notification-error = ${color1}
 misc              = ${color2}
 EOF
 
-            /home/$USER/.spicetify/spicetify config current_theme Sleek
-            /home/$USER/.spicetify/spicetify config color_scheme Pywal
-            /home/$USER/.spicetify/spicetify apply
+            spicetify config current_theme Sleek
+            spicetify config color_scheme Pywal
+            spicetify apply
 
             if hyprctl clients | grep "Spotify"; then
-                /home/$USER/.spicetify/spicetify watch -s &
+                spicetify watch -s &
                 sleep 1 && pkill spicetify
             fi
 

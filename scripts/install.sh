@@ -109,7 +109,7 @@ install_deps() {
 
     $AUR_HELPER -S --needed --noconfirm \
         cava pipes.sh checkupdates-with-aur librewolf-bin wlogout \
-        python-pywalfox-librewolf spotify vesktop-bin waypaper >/dev/null 2>&1 &&
+        python-pywalfox-librewolf spotify vesktop-bin waypaper spicetify-cli >/dev/null 2>&1 &&
         printf "%b\n" "${GREEN}::${RC} AUR dependencies installed (${current_step}/${total_steps})" || {
         printf "%b\n" "${RED}::${RC} Failed to install AUR dependencies."
         exit 1
@@ -195,10 +195,9 @@ setup_configurations() {
     printf "%b\n" "${YELLOW}::${RC} Setting up Spotify theming..."
     $ESCALATION_TOOL chmod a+wr /opt/spotify
     $ESCALATION_TOOL chmod a+wr /opt/spotify/Apps -R
-    curl -fsSL https://raw.githubusercontent.com/spicetify/cli/main/install.sh | sed 's/read -r.*/:/' | sh >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to install spicetify."; }
-    yes | $HOME/.spicetify/spicetify backup apply >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to apply spicetify backup."; }
+    yes | spicetify backup apply >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to apply spicetify backup."; }
     mkdir -p "$XDG_CONFIG_HOME/spicetify/Themes"
-    cp -R "$HYPRLAND_DIR/extra/Sleek" "$XDG_CONFIG_HOME/spicetify/Themes"
+    cp -R "$HYPRLAND_DIR/extra/spotify/Sleek" "$XDG_CONFIG_HOME/spicetify/Themes"
 
     printf "%b\n" "${YELLOW}::${RC} Testing color scheme generation..."
     /usr/bin/wal -i "$HYPRLAND_DIR/wallpapers/baddie.png" >/dev/null 2>&1

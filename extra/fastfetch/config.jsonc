@@ -12,6 +12,10 @@
   },
 
 "logo": {
+    "color": {
+        "1": "default",
+        "2": "default"
+    },
     "padding": {
       "top": 1
     }
@@ -21,7 +25,7 @@
     "break",
     {
       "type": "custom",
-      "format": "            \u001b[31m    フェムボーイが大好き            \u001b[0m"
+      "format": "                 \u001b[31mフェムボーイが大好き\u001b[0m"
     },
     {
       "type": "custom",

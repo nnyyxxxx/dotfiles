@@ -166,4 +166,3 @@ ZSH_HIGHLIGHT_STYLES[cursor]='fg=white'
 
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-export PATH=$PATH:$HOME/.spicetify
