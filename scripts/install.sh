@@ -1,125 +1,62 @@
 #!/bin/sh
 
-RC='\033[0m'
-RED='\033[31m'
-YELLOW='\033[33m'
-GREEN='\033[32m'
-
-warning_message() {
-    if ! command -v pacman >/dev/null 2>&1; then
-        printf "%b\n" "${RED}::${RC} Automated installation is only available for Arch-based distributions, install manually."
-        exit 1
-    fi
-}
-
-set_escalation_tool() {
-    if command -v sudo >/dev/null 2>&1; then
-        ESCALATION_TOOL="sudo"
-    elif command -v doas >/dev/null 2>&1; then
-        ESCALATION_TOOL="doas"
-    fi
-}
-
-request_elevation() {
-    if [ "$ESCALATION_TOOL" = "sudo" ]; then
-        { sudo -v && clear; } || { printf "%b\n" "${RED}::${RC} Failed to gain elevation."; }
-    elif [ "$ESCALATION_TOOL" = "doas" ]; then
-        { doas true && clear; } || { printf "%b\n" "${RED}::${RC} Failed to gain elevation."; }
-    fi
-}
-
-move_to_home() {
-    cd "$HOME" || {
-        printf "%b\n" "${RED}::${RC} Failed to move to home directory."
-        exit 1
-    }
-}
-
-declare_funcs() {
-    printf "%b\n" "${YELLOW}::${RC} Declaring functions..."
+declare_variables() {
+    RC='\033[0m'
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
     HYPRLAND_DIR="$HOME/dotfiles"
     mkdir -p "$HOME/.config"
     XDG_CONFIG_HOME="$HOME/.config"
     USERNAME=$(whoami)
 }
 
-install_aur_helper() {
-    printf "%b\n" "${YELLOW}::${RC} Checking for AUR helper..."
-
-    if command -v yay >/dev/null 2>&1; then
-        printf "%b\n" "${YELLOW}::${RC} Removing yay..."
-        $ESCALATION_TOOL pacman -Rns --noconfirm yay >/dev/null 2>&1 || {
-            printf "%b\n" "${RED}::${RC} Failed to remove yay."
-            exit 1
-        }
+warning_message() {
+    if ! command -v pacman; then
+        printf "%b\n" "${RED}Automated installation is only available for Arch-based distributions, install manually.${RC}"
+        exit 1
     fi
-
-    if ! command -v paru >/dev/null 2>&1; then
-        printf "%b\n" "${YELLOW}::${RC} Installing paru AUR helper..."
-        $ESCALATION_TOOL pacman -S --needed --noconfirm base-devel >/dev/null 2>&1 || {
-            printf "%b\n" "${RED}::${RC} Failed to install build dependencies."
-            exit 1
-        }
-        git clone https://aur.archlinux.org/paru-bin.git "$HOME/paru-bin" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to clone paru."; }
-        cd "$HOME/paru-bin"
-        printf "%b\n" "${YELLOW}::${RC} Building paru..."
-        makepkg -si --noconfirm >/dev/null 2>&1
-        cd "$HOME"
-        rm -rf "$HOME/paru-bin"
-        printf "%b\n" "${GREEN}::${RC} Paru installed successfully"
-    fi
-
-    printf "%b\n" "${GREEN}::${RC} Using paru as AUR helper"
-    AUR_HELPER="paru"
 }
 
-set_sys_ops() {
-    printf "%b\n" "${YELLOW}::${RC} Configuring system operations..."
-    printf "%b\n" "${YELLOW}::${RC} Setting up Parallel Downloads..."
-    $ESCALATION_TOOL sed -i 's/^#ParallelDownloads = 5$/ParallelDownloads = 5/' /etc/pacman.conf >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set Parallel Downloads."; }
+move_to_home() {
+    cd "$HOME"
+}
 
-    printf "%b\n" "${YELLOW}::${RC} Setting up default cursor..."
-    $ESCALATION_TOOL mkdir -p /usr/share/icons/default
-    $ESCALATION_TOOL touch /usr/share/icons/default/index.theme
-    $ESCALATION_TOOL sed -i 's/^Inherits=Adwaita$/Inherits=bibata-classic-xcursor/' /usr/share/icons/default/index.theme >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set bibata cursor."; }
-    printf "%b\n" "${GREEN}::${RC} System settings configured successfully"
+install_aur_helper() {
+    if command -v yay; then
+        sudo pacman -Rns yay --noconfirm
+    fi
+
+    if ! command -v paru; then
+        cd "$HOME"
+        sudo pacman -S --needed git base-devel
+        git clone https://aur.archlinux.org/paru-bin.git
+        cd paru-bin
+        makepkg -si --noconfirm
+        cd "$HOME"
+        rm -rf paru-bin
+    fi
+}
+
+set_system_operations() {
+    sudo sed -i 's/^#ParallelDownloads = 5$/ParallelDownloads = 5/' /etc/pacman.conf
+    sudo mkdir -p /usr/share/icons/default
+    sudo touch /usr/share/icons/default/index.theme
+    sudo sed -i 's/^Inherits=Adwaita$/Inherits=bibata-classic-xcursor/' /usr/share/icons/default/index.theme
 }
 
 enable_multilib() {
-    printf "%b\n" "${YELLOW}::${RC} Enabling multilib repository..."
-
-    $ESCALATION_TOOL sed -i '/^#\[multilib\]/{N;s/#\[multilib\]\n#Include/\[multilib\]\nInclude/}' /etc/pacman.conf || {
-        printf "%b\n" "${RED}::${RC} Failed to uncomment multilib repository."
-        exit 1
-    }
-
-    $ESCALATION_TOOL pacman -Sy >/dev/null 2>&1 || {
-        printf "%b\n" "${RED}::${RC} Failed to update package database after enabling multilib."
-        exit 1
-    }
-
-    printf "%b\n" "${GREEN}::${RC} Multilib repository enabled successfully"
+    sudo sed -i '/^#\[multilib\]/{N;s/#\[multilib\]\n#Include/\[multilib\]\nInclude/}' /etc/pacman.conf
 }
 
 install_deps() {
-    printf "%b\n" "${YELLOW}::${RC} Installing dependencies..."
-    printf "%b\n" "${YELLOW}::${RC} This might take a minute or two..."
-    total_steps=2
-    current_step=1
-
-    $AUR_HELPER -S --needed --noconfirm \
+    paru -S --needed --noconfirm \
         cava pipes.sh checkupdates-with-aur librewolf-bin wlogout \
-        python-pywalfox-librewolf spotify vesktop-bin waypaper spicetify-cli >/dev/null 2>&1 &&
-        printf "%b\n" "${GREEN}::${RC} AUR dependencies installed (${current_step}/${total_steps})" || {
-        printf "%b\n" "${RED}::${RC} Failed to install AUR dependencies."
-        exit 1
-    }
-    current_step=$((current_step + 1))
+        python-pywalfox-librewolf spotify vesktop-bin waypaper spicetify-cli
 
-    $ESCALATION_TOOL pacman -Rns --noconfirm \
-        lightdm gdm lxdm lemurs emptty xorg-xdm ly hyprland-git >/dev/null 2>&1
+    sudo pacman -Rns --noconfirm \
+        lightdm gdm lxdm lemurs emptty xorg-xdm ly hyprland-git
 
-    $ESCALATION_TOOL pacman -Syyu --needed --noconfirm \
+    sudo pacman -Syyu --needed --noconfirm \
         cliphist waybar grim slurp hyprpicker hyprpaper bleachbit hyprland fastfetch cpio \
         pipewire ttf-jetbrains-mono-nerd noto-fonts-emoji ttf-liberation ttf-dejavu meson \
         ttf-fira-sans ttf-fira-mono xdg-desktop-portal zip unzip cmake \
@@ -136,132 +73,117 @@ install_deps() {
         ncurses lib32-ncurses vulkan-icd-loader lib32-vulkan-icd-loader ocl-icd lib32-ocl-icd libva lib32-libva \
         gst-plugins-base-libs lib32-gst-plugins-base-libs sdl2 lib32-sdl2 v4l-utils lib32-v4l-utils sqlite bubblewrap \
         lib32-sqlite vulkan-radeon lib32-vulkan-radeon lib32-mangohud mangohud pavucontrol qt6ct hyperfine \
-        lsp-plugins fuzzel polkit-kde-agent >/dev/null 2>&1 &&
-        printf "%b\n" "${GREEN}::${RC} Dependencies installed (${current_step}/${total_steps})" || {
-        printf "%b\n" "${RED}::${RC} Failed to install dependencies. Check /var/log/pacman.log for details."
-        exit 1
-    }
+        lsp-plugins fuzzel polkit-kde-agent
 }
 
-setup_configurations() {
-    printf "%b\n" "${YELLOW}::${RC} Setting up configuration files..."
-    printf "%b\n" "${YELLOW}::${RC} Installing cursor themes..."
+setup_cursors() {
+    sudo cp -R "$HYPRLAND_DIR/extra/bibata-classic-hyprcursor" /usr/share/icons/
+    sudo cp -R "$HYPRLAND_DIR/extra/bibata-classic-xcursor" /usr/share/icons
+    cp -R "$HYPRLAND_DIR/extra/bibata-classic-hyprcursor" "$HOME/.local/share/icons"
+    cp -R "$HYPRLAND_DIR/extra/bibata-classic-xcursor" "$HOME/.local/share/icons"
+}
 
-    $ESCALATION_TOOL cp -R "$HYPRLAND_DIR/extra/bibata-hyprcursor" /usr/share/icons/ >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up bibata hypr cursor."; }
-    $ESCALATION_TOOL cp -R "$HYPRLAND_DIR/extra/bibata-xcursor" /usr/share/icons >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up bibata x cursor"; }
-    cp -R "$HYPRLAND_DIR/extra/bibata-hyprcursor" "$HOME/.local/share/icons" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up bibata hyprcursor cursor"; }
-    cp -R "$HYPRLAND_DIR/extra/bibata-xcursor" "$HOME/.local/share/icons" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up bibata x cursor"; }
+backup_configs() {
+    find "$HOME" -type l -not -path "$HOME/dotfiles/*" -not -path "$HOME/dotfiles" -exec rm {} +
 
-    $ESCALATION_TOOL cp -R "$HYPRLAND_DIR/extra/bibata-classic-hyprcursor" /usr/share/icons/ >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up bibata hypr cursor."; }
-    $ESCALATION_TOOL cp -R "$HYPRLAND_DIR/extra/bibata-classic-xcursor" /usr/share/icons >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up bibata x cursor"; }
-    cp -R "$HYPRLAND_DIR/extra/bibata-classic-hyprcursor" "$HOME/.local/share/icons" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up bibata classic hyprcursor cursor"; }
-    cp -R "$HYPRLAND_DIR/extra/bibata-classic-xcursor" "$HOME/.local/share/icons" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up bibata classic x cursor"; }
+    configs="nvim gtk-3.0 fastfetch cava hypr waybar alacritty dunst qt5ct qt6ct wlogout fuzzel waypaper"
 
-    printf "%b\n" "${YELLOW}::${RC} Cleaning up old configurations..."
-    find "$HOME" -type l -not -path "$HOME/dotfiles/*" -not -path "$HOME/dotfiles" -exec rm {} + >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to remove symlinks."; }
+    for config in $configs; do
+        mv "$XDG_CONFIG_HOME/$config" "$XDG_CONFIG_HOME/$config-bak"
+    done
 
-    printf "%b\n" "${YELLOW}::${RC} Backing up existing configurations..."
-    mv "$XDG_CONFIG_HOME/nvim" "$XDG_CONFIG_HOME/nvim-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/gtk-3.0" "$XDG_CONFIG_HOME/gtk-3.0-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/fastfetch" "$XDG_CONFIG_HOME/fastfetch-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/cava" "$XDG_CONFIG_HOME/cava-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/hypr" "$XDG_CONFIG_HOME/hypr-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/waybar" "$XDG_CONFIG_HOME/waybar-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/alacritty" "$XDG_CONFIG_HOME/alacritty-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/dunst" "$XDG_CONFIG_HOME/dunst-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/qt5ct" "$XDG_CONFIG_HOME/qt5ct-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/hypr" "$XDG_CONFIG_HOME/hypr-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/qt6ct" "$XDG_CONFIG_HOME/qt6ct-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/wlogout" "$XDG_CONFIG_HOME/wlogout-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/fuzzel" "$XDG_CONFIG_HOME/fuzzel-bak" >/dev/null 2>&1
-    mv "$XDG_CONFIG_HOME/waypaper" "$XDG_CONFIG_HOME/waypaper-bak" >/dev/null 2>&1
-    mv "$HOME/.zshrc" "$HOME/.zshrc-bak" >/dev/null 2>&1
-    mv "$HOME/.zprofile" "$HOME/.zprofile-bak" >/dev/null 2>&1
+    mv "$HOME/.zshrc" "$HOME/.zshrc-bak"
+    mv "$HOME/.zprofile" "$HOME/.zprofile-bak"
+}
 
-    printf "%b\n" "${YELLOW}::${RC} Setting up SDDM..."
-    $ESCALATION_TOOL mkdir -p /usr/share/sddm/themes >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to create sddm themes directory."; }
-    $ESCALATION_TOOL cp -R "$HYPRLAND_DIR/extra/sddm/corners" /usr/share/sddm/themes >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up sddm theme."; }
-    $ESCALATION_TOOL ln -sf "$HYPRLAND_DIR/extra/sddm/sddm.conf" /etc/sddm.conf >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up sddm configuration."; }
-    $ESCALATION_TOOL systemctl enable sddm >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to enable sddm."; }
+setup_sddm() {
+    sudo mkdir -p /usr/share/sddm/themes
+    sudo cp -R "$HYPRLAND_DIR/extra/sddm/corners" /usr/share/sddm/themes
+    sudo ln -sf "$HYPRLAND_DIR/extra/sddm/sddm.conf" /etc/sddm.conf
+    sudo systemctl enable sddm
+}
 
-    printf "%b\n" "${YELLOW}::${RC} Configuring shell environment..."
-    $ESCALATION_TOOL mkdir -p /etc/zsh/ >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to create zsh directory."; }
-    $ESCALATION_TOOL touch /etc/zsh/zshenv >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to create zshenv."; }
-    echo "export ZDOTDIR=\"$HOME\"" | $ESCALATION_TOOL tee -a /etc/zsh/zshenv >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set ZDOTDIR."; }
-    ln -sf "$HYPRLAND_DIR/extra/zsh/.zshrc" "$HOME/.zshrc" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up .zshrc."; }
-    ln -sf "$HYPRLAND_DIR/extra/zsh/.zprofile" "$HOME/.zprofile" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up .zprofile."; }
-    touch "$HOME/.zlogin" "$HOME/.zshenv" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to create zlogin and zshenv."; }
+setup_zsh() {
+    sudo mkdir -p /etc/zsh/
+    sudo touch /etc/zsh/zshenv
+    echo "export ZDOTDIR=\"$HOME\"" | sudo tee -a /etc/zsh/zshenv
+    ln -sf "$HYPRLAND_DIR/extra/zsh/.zshrc" "$HOME/.zshrc"
+    ln -sf "$HYPRLAND_DIR/extra/zsh/.zprofile" "$HOME/.zprofile"
+    touch "$HOME/.zlogin" "$HOME/.zshenv"
+}
 
-    printf "%b\n" "${YELLOW}::${RC} Setting up Spotify theming..."
-    $ESCALATION_TOOL chmod a+wr /opt/spotify
-    $ESCALATION_TOOL chmod a+wr /opt/spotify/Apps -R
-    yes | spicetify backup apply >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to apply spicetify backup."; }
+setup_spotify() {
+    sudo chmod a+wr /opt/spotify
+    sudo chmod a+wr /opt/spotify/Apps -R
+    yes | spicetify backup apply
     mkdir -p "$XDG_CONFIG_HOME/spicetify/Themes"
     mkdir -p "$XDG_CONFIG_HOME/spicetify/Extensions"
     cp -R "$HYPRLAND_DIR/extra/spotify/adblock.js" "$XDG_CONFIG_HOME/spicetify/Extensions"
     cp -R "$HYPRLAND_DIR/extra/spotify/Sleek" "$XDG_CONFIG_HOME/spicetify/Themes"
+}
 
-    wal -i "$HYPRLAND_DIR/wallpapers/baddie.png" >/dev/null 2>&1
-
+setup_nvim() {
     mkdir -p "$HOME/.local/share/nvim/base46"
     touch "$HOME/.local/share/nvim/base46/statusline"
     touch "$HOME/.local/share/nvim/base46/nvimtree"
     touch "$HOME/.local/share/nvim/base46/defaults"
+}
 
-    printf "%b\n" "${YELLOW}::${RC} Creating configuration symlinks..."
-    $ESCALATION_TOOL ln -sf "$HYPRLAND_DIR/extra/gtk-3.0/dark-horizon" /usr/share/themes/ >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up dark-horizon theme."; }
-    ln -sf "$HYPRLAND_DIR/extra/cava" "$XDG_CONFIG_HOME/cava" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up cava configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/fastfetch" "$XDG_CONFIG_HOME/fastfetch" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up fastfetch configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/nvim" "$XDG_CONFIG_HOME/nvim" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up nvim configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/gtk-3.0" "$XDG_CONFIG_HOME/gtk-3.0" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up gtk-3.0 configuration."; }
-    ln -sf "$HYPRLAND_DIR/hypr" "$XDG_CONFIG_HOME/hypr" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up hypr configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/waybar" "$XDG_CONFIG_HOME/waybar" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up waybar configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/dunst" "$XDG_CONFIG_HOME/dunst" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up dunst configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/wlogout" "$XDG_CONFIG_HOME/wlogout" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up wlogout configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/alacritty" "$XDG_CONFIG_HOME/alacritty" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up alacritty configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/qt5ct" "$XDG_CONFIG_HOME/qt5ct" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up qt5ct configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/qt6ct" "$XDG_CONFIG_HOME/qt6ct" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up qt6ct configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/fuzzel" "$XDG_CONFIG_HOME/fuzzel" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up fuzzel configuration."; }
-    ln -sf "$HYPRLAND_DIR/extra/waypaper" "$XDG_CONFIG_HOME/waypaper" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up waypaper configuration."; }
-    cp -R "$HYPRLAND_DIR/extra/templates/discord-pywal.css" "$XDG_CONFIG_HOME/wal/templates" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up discord-pywal.css."; }
-    cp -R "$HYPRLAND_DIR/extra/templates/alacritty.toml" "$XDG_CONFIG_HOME/wal/templates" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up alacritty.toml."; }
+create_symlinks() {
+    sudo ln -sf "$HYPRLAND_DIR/extra/gtk-3.0/dark-horizon" /usr/share/themes/
 
-    systemctl --user enable pipewire >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up pipewire."; }
-    systemctl --user enable pipewire-pulse >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to set up pipewire-pulse."; }
+    configs="cava fastfetch nvim gtk-3.0 hypr waybar dunst wlogout alacritty qt5ct qt6ct fuzzel waypaper"
 
-    $ESCALATION_TOOL ln -sf /bin/dash /bin/sh >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to create symlink for sh."; }
-    $ESCALATION_TOOL usermod -s /bin/zsh "$USERNAME" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to change shell."; }
+    for config in $configs; do
+        if [ "$config" = "hypr" ]; then
+            ln -sf "$HYPRLAND_DIR/$config" "$XDG_CONFIG_HOME/$config"
+        else
+            ln -sf "$HYPRLAND_DIR/extra/$config" "$XDG_CONFIG_HOME/$config"
+        fi
+    done
 
-    mkdir -p "$HOME/Documents" >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to create Documents directory."; }
+    cp -R "$HYPRLAND_DIR/extra/templates/discord-pywal.css" "$XDG_CONFIG_HOME/wal/templates"
+    cp -R "$HYPRLAND_DIR/extra/templates/alacritty.toml" "$XDG_CONFIG_HOME/wal/templates"
+}
 
-    pywalfox install --browser librewolf >/dev/null 2>&1 || { printf "%b\n" "${RED}::${RC} Failed to setup pywalfox."; }
+setup_system() {
+    systemctl --user enable pipewire
+    systemctl --user enable pipewire-pulse
+    sudo ln -sf /bin/dash /bin/sh
+    sudo usermod -s /bin/zsh "$USERNAME"
+    mkdir -p "$HOME/Documents"
+}
 
-    printf "%b\n" "${GREEN}::${RC} All configurations set up successfully"
+setup_configurations() {
+    setup_cursors
+    backup_configs
+    setup_sddm
+    setup_zsh
+    setup_spotify
+    wal -i "$HYPRLAND_DIR/wallpapers/baddie.png"
+    setup_nvim
+    create_symlinks
+    setup_system
+    pywalfox install --browser librewolf
 }
 
 setup_sddm_pfp() {
-    printf "%b\n" "${YELLOW}::${RC} Setting up SDDM profile picture..."
-    $ESCALATION_TOOL mkdir -p /var/lib/AccountsService/icons/
-    $ESCALATION_TOOL cp "$HYPRLAND_DIR/pfps/astolfo.jpg" "/var/lib/AccountsService/icons/$USERNAME"
-
-    $ESCALATION_TOOL mkdir -p /var/lib/AccountsService/users/
-    echo "[User]" | $ESCALATION_TOOL tee "/var/lib/AccountsService/users/$USERNAME" >/dev/null
-    echo "Icon=/var/lib/AccountsService/icons/$USERNAME" | $ESCALATION_TOOL tee -a "/var/lib/AccountsService/users/$USERNAME" >/dev/null
-    printf "%b\n" "${GREEN}::${RC} SDDM profile picture configured successfully"
+    sudo mkdir -p /var/lib/AccountsService/icons/
+    sudo cp "$HYPRLAND_DIR/pfps/astolfo.jpg" "/var/lib/AccountsService/icons/$USERNAME"
+    sudo mkdir -p /var/lib/AccountsService/users/
+    echo "[User]" | sudo tee "/var/lib/AccountsService/users/$USERNAME" >/dev/null
+    echo "Icon=/var/lib/AccountsService/icons/$USERNAME" | sudo tee -a "/var/lib/AccountsService/users/$USERNAME" >/dev/null
 }
 
 success_message() {
-    printf "%b\n" "${YELLOW}::${RC} Please reboot your system to apply the changes."
-    printf "%b\n" "${GREEN}::${RC} Installation complete."
+    printf "%b\n" "${GREEN}Installation complete.${RC}"
 }
 
+declare_variables
 warning_message
-set_escalation_tool
-request_elevation
 move_to_home
-declare_funcs
 install_aur_helper
-set_sys_ops
+set_system_operations
 enable_multilib
 install_deps
 setup_configurations
