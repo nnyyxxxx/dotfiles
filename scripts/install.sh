@@ -50,8 +50,9 @@ enable_multilib() {
 
 install_deps() {
     paru -S --needed --noconfirm \
-        cava pipes.sh checkupdates-with-aur librewolf-bin wlogout \
-        python-pywalfox-librewolf spotify vesktop-bin waypaper spicetify-cli
+        cava pipes.sh checkupdates-with-aur librewolf-bin \
+        python-pywalfox-librewolf spotify vesktop-bin waypaper \
+        spicetify-cli
 
     sudo pacman -Rns --noconfirm \
         lightdm gdm lxdm lemurs emptty xorg-xdm ly hyprland-git
@@ -86,7 +87,7 @@ setup_cursors() {
 backup_configs() {
     find "$HOME" -type l -not -path "$HOME/dotfiles/*" -not -path "$HOME/dotfiles" -exec rm {} +
 
-    configs="nvim gtk-3.0 fastfetch cava hypr waybar alacritty dunst qt5ct qt6ct wlogout fuzzel waypaper"
+    configs="nvim gtk-3.0 fastfetch cava hypr waybar alacritty dunst qt5ct qt6ct fuzzel waypaper"
 
     for config in $configs; do
         mv "$XDG_CONFIG_HOME/$config" "$XDG_CONFIG_HOME/$config-bak"
@@ -132,7 +133,7 @@ setup_nvim() {
 create_symlinks() {
     sudo ln -sf "$HYPRLAND_DIR/extra/gtk-3.0/dark-horizon" /usr/share/themes/
 
-    configs="cava fastfetch nvim gtk-3.0 hypr waybar dunst wlogout alacritty qt5ct qt6ct fuzzel waypaper"
+    configs="cava fastfetch nvim gtk-3.0 hypr waybar dunst alacritty qt5ct qt6ct fuzzel waypaper"
 
     for config in $configs; do
         if [ "$config" = "hypr" ]; then
