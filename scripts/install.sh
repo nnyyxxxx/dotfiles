@@ -42,9 +42,6 @@ set_system_operations() {
     sudo mkdir -p /usr/share/icons/default
     sudo touch /usr/share/icons/default/index.theme
     sudo sed -i 's/^Inherits=Adwaita$/Inherits=bibata-classic-xcursor/' /usr/share/icons/default/index.theme
-}
-
-enable_multilib() {
     sudo sed -i '/^#\[multilib\]/{N;s/#\[multilib\]\n#Include/\[multilib\]\nInclude/}' /etc/pacman.conf
 }
 
@@ -185,7 +182,6 @@ warning_message
 move_to_home
 install_aur_helper
 set_system_operations
-enable_multilib
 install_deps
 setup_configurations
 setup_sddm_pfp
