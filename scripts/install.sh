@@ -167,7 +167,7 @@ setup_configurations() {
 
 setup_sddm_pfp() {
     sudo mkdir -p /var/lib/AccountsService/icons/
-    sudo cp "$HYPRLAND_DIR/pfps/astolfo.jpg" "/var/lib/AccountsService/icons/$USERNAME"
+    sudo cp "$HYPRLAND_DIR/pfps/badbitch.jpg" "/var/lib/AccountsService/icons/$USERNAME"
     sudo mkdir -p /var/lib/AccountsService/users/
     echo "[User]" | sudo tee "/var/lib/AccountsService/users/$USERNAME" >/dev/null
     echo "Icon=/var/lib/AccountsService/icons/$USERNAME" | sudo tee -a "/var/lib/AccountsService/users/$USERNAME" >/dev/null
