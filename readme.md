@@ -1,2 +1,0 @@
-## Preview
-![](.github/preview.png)
