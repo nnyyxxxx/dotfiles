@@ -116,8 +116,7 @@
 
     "custom/power": {
         "format": "󰤆",
-        "tooltip": false,
-        "on-click": "wlogout"
+        "tooltip": false
     },
 
     "custom/updates": {

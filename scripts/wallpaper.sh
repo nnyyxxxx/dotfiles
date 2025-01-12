@@ -121,53 +121,6 @@ inotifywait -m -e modify,create "$config_dir" | while read -r directory events f
             sed -i "s/@sky: #[0-9a-fA-F]\+;/@sky: #${color1};/g" "$HOME/dotfiles/extra/librewolf/catppuccin.json"
             sed -i "s/@lavender: #[0-9a-fA-F]\+;/@lavender: #${color7};/g" "$HOME/dotfiles/extra/librewolf/catppuccin.json"
 
-            cat >$HOME/dotfiles/extra/wlogout/style.css <<EOF
-window {
-	background-color: rgba(12, 12, 12, 0.9);
-}
-
-button {
-    border-radius: 0;
-    border-color: #${color2};
-    color: #${color7};
-    background-color: #${color0};
-    border-style: solid;
-    border-width: 1px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 25%;
-}
-
-button:hover {
-    background-color: #${color2};
-    outline-style: none;
-}
-
-#lock {
-    background-image: image(url("/usr/share/wlogout/icons/lock.png"), url("/usr/local/share/wlogout/icons/lock.png"));
-}
-
-#logout {
-    background-image: image(url("/usr/share/wlogout/icons/logout.png"), url("/usr/local/share/wlogout/icons/logout.png"));
-}
-
-#suspend {
-    background-image: image(url("/usr/share/wlogout/icons/suspend.png"), url("/usr/local/share/wlogout/icons/suspend.png"));
-}
-
-#hibernate {
-    background-image: image(url("/usr/share/wlogout/icons/hibernate.png"), url("/usr/local/share/wlogout/icons/hibernate.png"));
-}
-
-#shutdown {
-    background-image: image(url("/usr/share/wlogout/icons/shutdown.png"), url("/usr/local/share/wlogout/icons/shutdown.png"));
-}
-
-#reboot {
-    background-image: image(url("/usr/share/wlogout/icons/reboot.png"), url("/usr/local/share/wlogout/icons/reboot.png"));
-}
-EOF
-
             cat >$HOME/dotfiles/extra/dunst/dunstrc <<EOF
 [global]
     width = 300
