@@ -48,7 +48,7 @@ set_system_operations() {
 install_deps() {
     paru -S --needed --noconfirm \
         cava pipes.sh checkupdates-with-aur librewolf-bin \
-        python-pywalfox-librewolf spotify vesktop-bin waypaper \
+        python-pywalfox-librewolf spotify vesktop-bin waypaper-git \
         spicetify-cli
 
     sudo pacman -Rns --noconfirm \
