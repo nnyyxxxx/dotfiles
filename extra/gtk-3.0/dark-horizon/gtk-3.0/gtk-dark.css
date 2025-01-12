@@ -12,10 +12,10 @@
 
 @keyframes ripple-on-headerbar {
   from {
-    background-image: radial-gradient(circle, #EAABA4 0%, transparent 0%);
+    background-image: radial-gradient(circle, #F7C8B5 0%, transparent 0%);
   }
   to {
-    background-image: radial-gradient(circle, #EAABA4 100%, transparent 0%);
+    background-image: radial-gradient(circle, #F7C8B5 100%, transparent 0%);
   }
 }
 
@@ -34,7 +34,7 @@
   outline-color: transparent;
   outline-offset: -4px;
   -gtk-outline-radius: 6px;
-  -gtk-secondary-caret-color: #EAABA4;
+  -gtk-secondary-caret-color: #F7C8B5;
 }
 
 *:focus {
@@ -346,7 +346,7 @@ XfdesktopIconView.view .content-view flowbox treeview.view flowbox .rubberband,
 flowbox treeview.view flowbox .content-view rubberband,
 flowbox treeview.view flowbox .content-view XfdesktopIconView.view .rubberband,
 XfdesktopIconView.view flowbox treeview.view flowbox .content-view .rubberband {
-  border: 1px solid #B29B95;
+  border: 1px solid #B4A0A5;
   background-color: rgba(137, 180, 250, 0.3);
 }
 
@@ -448,7 +448,7 @@ spinbutton, entry {
 
 spinbutton:focus, entry:focus {
   background-color: rgba(239, 241, 245, 0.08);
-  box-shadow: inset 0 0 0 2px #B29B95;
+  box-shadow: inset 0 0 0 2px #B4A0A5;
 }
 
 spinbutton:drop(active), entry:drop(active) {
@@ -471,7 +471,7 @@ spinbutton:disabled, entry:disabled {
 
 .background:not(.csd) entry:focus {
   background-color: #000000;
-  box-shadow: inset 0 0 0 2px #B29B95;
+  box-shadow: inset 0 0 0 2px #B4A0A5;
 }
 
 .background:not(.csd) entry:drop(active) {
@@ -547,7 +547,7 @@ entry.error {
 
 entry.error:focus {
   background-color: rgba(239, 241, 245, 0.08);
-  box-shadow: inset 0 0 0 2px #B29B95;
+  box-shadow: inset 0 0 0 2px #B4A0A5;
 }
 
 entry.error:disabled {
@@ -577,7 +577,7 @@ entry.warning {
 
 entry.warning:focus {
   background-color: rgba(239, 241, 245, 0.08);
-  box-shadow: inset 0 0 0 2px #B29B95;
+  box-shadow: inset 0 0 0 2px #B4A0A5;
 }
 
 entry.warning:disabled {
@@ -600,7 +600,7 @@ entry.warning image:disabled {
 
 entry progress {
   margin: 2px -8px;
-  border-bottom: 2px solid #B29B95;
+  border-bottom: 2px solid #B4A0A5;
   background-color: transparent;
 }
 
@@ -653,7 +653,7 @@ treeview entry.flat, treeview entry.flat:focus, treeview entry, treeview entry:f
  ***********/
 @keyframes needs-attention {
   from {
-    background-image: -gtk-gradient(radial, center center, 0, center center, 0.001, to(#EAABA4), to(transparent));
+    background-image: -gtk-gradient(radial, center center, 0, center center, 0.001, to(#F7C8B5), to(transparent));
   }
   to {
     background-image: -gtk-gradient(radial, center center, 0, center center, 0.5, to(#424243), to(transparent));
@@ -1229,7 +1229,7 @@ button.combo:only-child:hover {
 
 button.combo:only-child:checked {
   background-color: rgba(239, 241, 245, 0.08);
-  box-shadow: inset 0 0 0 2px #B29B95;
+  box-shadow: inset 0 0 0 2px #B4A0A5;
 }
 
 button.combo:only-child:disabled {
@@ -1953,7 +1953,7 @@ menu {
   background-color: #000000;
   background-clip: border-box;
   border-radius: 12px;
-  border: 1px solid #B29B95;
+  border: 1px solid #B4A0A5;
 }
 
 .csd menu {
@@ -2819,7 +2819,7 @@ scale slider {
   border-radius: 9999px;
   color: #424243;
   background-color: #000000;
-  box-shadow: inset 0 0 0 2px #B29B95;
+  box-shadow: inset 0 0 0 2px #B4A0A5;
 }
 
 scale slider:hover {
@@ -4126,7 +4126,7 @@ messagedialog.background.csd decoration {
   border-radius: 0;
   box-shadow: none;
   background-color: #000000;
-  border: 1px solid #B29B95;
+  border: 1px solid #B4A0A5;
 }
 
 .solid-csd decoration:backdrop {
@@ -4263,7 +4263,7 @@ cursor-handle.insertion-cursor:dir(ltr), cursor-handle.insertion-cursor:dir(rtl)
 }
 
 :not(decoration):not(window):drop(active) {
-  caret-color: #EAABA4;
+  caret-color: #F7C8B5;
 }
 
 stackswitcher {
@@ -5375,7 +5375,7 @@ docktab {
   border-width: 1px;
   border-color: transparent;
   box-shadow: inset 0 -2px transparent;
-  background-image: radial-gradient(circle, #EAABA4 10%, transparent 0%);
+  background-image: radial-gradient(circle, #F7C8B5 10%, transparent 0%);
   background-repeat: no-repeat;
   background-position: center;
   background-size: 0% 0%;
@@ -6186,7 +6186,7 @@ window.background.chromium {
 
 window.background.chromium entry,
 window.background.chromium > button {
-  border: 1px solid #B29B95;
+  border: 1px solid #B4A0A5;
 }
 
 window.background.chromium > button {
@@ -6229,7 +6229,7 @@ window.background.chromium treeview.view button {
 }
 
 window.background.chromium menu {
-  border-color: #B29B95;
+  border-color: #B4A0A5;
 }
 
 window.background.chromium menu menuitem {
@@ -6265,12 +6265,12 @@ tooltip.background.chromium {
 }
 
 #MozillaGtkWidget > widget > frame > border {
-  border-color: #B29B95;
+  border-color: #B4A0A5;
 }
 
 #MozillaGtkWidget > widget > entry,
 #MozillaGtkWidget > widget > button > button {
-  border: 1px solid #B29B95;
+  border: 1px solid #B4A0A5;
   border-radius: 6px;
   box-shadow: none;
 }
@@ -6286,8 +6286,8 @@ tooltip.background.chromium {
 }
 
 #MozillaGtkWidget > widget > entry:focus {
-  border-color: #B29B95;
-  box-shadow: inset 0 0 0 2px #B29B95;
+  border-color: #B4A0A5;
+  box-shadow: inset 0 0 0 2px #B4A0A5;
 }
 
 #MozillaGtkWidget > widget > entry:disabled {
@@ -8404,10 +8404,10 @@ menubar.-vala-panel-background > menuitem:disabled {
    use responsibly! */
 /*
 widget text/foreground color */
-@define-color theme_fg_color #f6e9de;
+@define-color theme_fg_color #f6ece5;
 /*
 text color for entries, views and content in general */
-@define-color theme_text_color #f6e9de;
+@define-color theme_text_color #f6ece5;
 /*
 widget base background color */
 @define-color theme_bg_color #000000;
@@ -8416,7 +8416,7 @@ text widgets and the like base background color */
 @define-color theme_base_color #0F0F0F;
 /*
 base background color of selections */
-@define-color theme_selected_bg_color #B29B95;
+@define-color theme_selected_bg_color #B4A0A5;
 /*
 text/foreground color of selections */
 @define-color theme_selected_fg_color rgba(17, 17, 27, 0.87);
@@ -8458,9 +8458,9 @@ widgets main borders color on backdrop windows */
 @define-color unfocused_borders rgba(239, 241, 245, 0.12);
 /*
 these are pretty self explicative */
-@define-color warning_color #FB9294;
-@define-color error_color #D87986;
-@define-color success_color #B29B95;
+@define-color warning_color #E8A3A1;
+@define-color error_color #BD7589;
+@define-color success_color #B4A0A5;
 /*
 these colors are exported for the window manager and shouldn't be used in applications,
 read if you used those and something break with a version upgrade you're on your own... */
