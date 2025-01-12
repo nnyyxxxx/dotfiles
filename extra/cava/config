@@ -106,11 +106,11 @@
 background = '#000000'
 gradient = 1
 
-gradient_color_1 = '#f6ece5'
-gradient_color_2 = '#F9D4C8'
-gradient_color_3 = '#D4CED2'
-gradient_color_4 = '#F7C8B5'
-gradient_color_5 = '#E8A3A1'
-gradient_color_6 = '#B4A0A5'
-gradient_color_7 = '#BD7589'
+gradient_color_1 = '#f6e9de'
+gradient_color_2 = '#F1D7C9'
+gradient_color_3 = '#F5CCAB'
+gradient_color_4 = '#EAABA4'
+gradient_color_5 = '#FB9294'
+gradient_color_6 = '#B29B95'
+gradient_color_7 = '#D87986'
 gradient_color_8 = '#000000'
